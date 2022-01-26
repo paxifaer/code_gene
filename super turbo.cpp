@@ -9,425 +9,367 @@
 #include<cstring>
 
 //void AI(int board[][19], int wcount[][1700], int &player, int &winner);
-/****************************************/     //»ù´¡ÉèÖÃ
+/****************************************/     //åŸºç¡€è®¾ç½®
 //srand((unsigned)time(NULL));
-struct Point			//µã×ø±êµÄ½á¹¹Ìå
+struct Point            //ç‚¹åæ ‡çš„ç»“æ„ä½“
 {
-    int x,y;
-}point;
+    int x, y;
+} point;
 int huowu[21], chongwu[21], shuanghuosi[21], danhuosi[21], miansi[21], huosan[21], miansan[21], huoer[21];
-int i1=1500,i2=400,i3=300,i4=150,i5=75,i6=30,i7=6,i8=4;
+int i1 = 1500, i2 = 400, i3 = 300, i4 = 150, i5 = 75, i6 = 30, i7 = 6, i8 = 4;
 
 
-void record(int board[][20],int board1[][20],int wcount[][1700],int wcount1[][1700]);
-void Search(int table[][20],  int player, int &x, int &y, int board[][20]);
+void record(int board[][20], int board1[][20], int wcount[][1700], int wcount1[][1700]);
 
-struct  ranseti{int huowu;
-int chongwu;
-int shuanghuosi;
-int danhuosi, miansi, huosan, miansan, huoer;
-	
-	int shiyingdu=0; 
-	
+void Search(int table[][20], int player, int &x, int &y, int board[][20]);
+
+struct ranseti {
+    int huowu;
+    int chongwu;
+    int shuanghuosi;
+    int danhuosi, miansi, huosan, miansan, huoer;
+
+    int shiyingdu = 0;
+
 };
 ranseti ra[21];
-ranseti gj[6];//¹Ú¾üĞòÁĞ 
+ranseti gj[6];//å† å†›åºåˆ—
 
-void Init(int board[][20], int wcount[][1700])				//³õÊ¼»¯º¯Êı£¬½«¼ÇÂ¼Æå×ÓµÄÊı×é³õÊ¼»¯
+void Init(int board[][20], int wcount[][1700])                //åˆå§‹åŒ–å‡½æ•°ï¼Œå°†è®°å½•æ£‹å­çš„æ•°ç»„åˆå§‹åŒ–
 {
-	int i, j;
+    int i, j;
 
-    for(i = 1; i <=19; i++)
-	{//³õÊ¼»»ÆåÅÌ×´Ì¬
-        for(j = 1; j <=19; j++)
-		{
+    for (i = 1; i <= 19; i++) {//åˆå§‹æ¢æ£‹ç›˜çŠ¶æ€
+        for (j = 1; j <= 19; j++) {
             board[i][j] = 0;
-		}
-	}
-
-	for(i = 0; i < 3; i++)
-	{
-		for(j = 1; j <=361; j++)
-		{
-			wcount[i][j] = 0;
-		}
-	}
-
-	
+        }
+    }
+    for (i = 0; i < 3; i++) {
+        for (j = 1; j <= 361; j++) {
+            wcount[i][j] = 0;
+        }
+    }
 }
-
-
-
-
-/***********************************************************************************************/   //Áù×ÓÆåºËĞÄ²¿·Ö£¨ÏÈºóÊÖ£¬Ê¤¸ºÅĞ¶¨£¬ÆåÅÌ¼ÇÂ¼£©
-
-
-void Record(int board[][20], int wcount[3][1700], const int player,int x,int y)              //¼ÇÂ¼Æå×Ó¡¢ÆåÊÖµÄÇé¿ö
+/***********************************************************************************************/   //å…­å­æ£‹æ ¸å¿ƒéƒ¨åˆ†ï¼ˆå…ˆåæ‰‹ï¼Œèƒœè´Ÿåˆ¤å®šï¼Œæ£‹ç›˜è®°å½•ï¼‰
+void Record(int board[][20], int wcount[3][1700], const int player, int x, int y)              //è®°å½•æ£‹å­ã€æ£‹æ‰‹çš„æƒ…å†µ
 {
-    board[x][y] = player;   
-	
-	 //ÆåÅÌ×´Ì¬¼ÇÂ¼ 0±íÊ¾¿Õ 1±íÊ¾¼× 2±íÊ¾ÒÒ
+    board[x][y] = player;
+
+    //æ£‹ç›˜çŠ¶æ€è®°å½• 0è¡¨ç¤ºç©º 1è¡¨ç¤ºç”² 2è¡¨ç¤ºä¹™
 //printf("\nx=%c  y=%c\n",(x-1+'A'),(y-1+'A'));
-	int k;int anti=1;
-int sum1=(y-1)*19+x,sum2=19*(y-1)+x+400,sum3=19*(y-1)+x+800,sum4=19*(y-1)+x+1200;
-	(anti==player)?(anti=2):(anti=1);
-	int flag;
-	
-wcount[player][(y-1)*19+x]=1;
-wcount[player][19*(y-1)+x+400]=1;
-wcount[player][19*(y-1)+x+800]=1;
-wcount[player][19*(y-1)+x+1200]=1;
-wcount[anti][sum1]=-1;
-wcount[anti][sum2]=-1;
-wcount[anti][sum3]=-1;
-wcount[anti][sum4]=-1;
+    int k;
+    int anti = 1;
+    int sum1 = (y - 1) * 19 + x, sum2 = 19 * (y - 1) + x + 400, sum3 = 19 * (y - 1) + x + 800, sum4 =
+            19 * (y - 1) + x + 1200;
+    (anti == player) ? (anti = 2) : (anti = 1);
+    int flag;
 
-int l=0,r=0;//ºáÁ¬ 
-if(sum1-1>0)
-l=wcount[player][sum1-1];
-if(sum1+1<=361)
-r=wcount[player][sum1+1];
+    wcount[player][(y - 1) * 19 + x] = 1;
+    wcount[player][19 * (y - 1) + x + 400] = 1;
+    wcount[player][19 * (y - 1) + x + 800] = 1;
+    wcount[player][19 * (y - 1) + x + 1200] = 1;
+    wcount[anti][sum1] = -1;
+    wcount[anti][sum2] = -1;
+    wcount[anti][sum3] = -1;
+    wcount[anti][sum4] = -1;
 
-
-if(l>=0)
-wcount[player][sum1]+=l;
-if(r>=0)
-wcount[player][sum1]+=r;
+    int l = 0, r = 0;//æ¨ªè¿
+    if (sum1 - 1 > 0)
+        l = wcount[player][sum1 - 1];
+    if (sum1 + 1 <= 361)
+        r = wcount[player][sum1 + 1];
 
 
-if(l>0)
-for(int sd=1;sd<=l;sd++)
-{
-wcount[player][sum1-sd]=wcount[player][sum1];
+    if (l >= 0)
+        wcount[player][sum1] += l;
+    if (r >= 0)
+        wcount[player][sum1] += r;
+
+
+    if (l > 0)
+        for (int sd = 1; sd <= l; sd++) {
+            wcount[player][sum1 - sd] = wcount[player][sum1];
 //printf("\nwcount[player][sum-sd]=%d",wcount[player][sum1-sd]);
-}
-if(r>0)
-for(int sd=1;sd<=r;sd++)
-{
-wcount[player][sum1+sd]=wcount[player][sum1];
+        }
+    if (r > 0)
+        for (int sd = 1; sd <= r; sd++) {
+            wcount[player][sum1 + sd] = wcount[player][sum1];
 //printf("\n%d",wcount[player][sum1]);
-}
+        }
 //printf("\n l1=%d r1=%d",l,r);
 
 
-l=0,r=0;//×İÁ¬ 
-if(y-1>0)
-l=wcount[player][sum2-19];
-if(y+1<=19)
-r=wcount[player][sum2+19];
+    l = 0, r = 0;//çºµè¿
+    if (y - 1 > 0)
+        l = wcount[player][sum2 - 19];
+    if (y + 1 <= 19)
+        r = wcount[player][sum2 + 19];
 
-if(l>=0)
-wcount[player][sum2]+=l;
-if(r>=0)
-wcount[player][sum2]+=r;
+    if (l >= 0)
+        wcount[player][sum2] += l;
+    if (r >= 0)
+        wcount[player][sum2] += r;
 
-if(l>0)
-for(int sd=1;sd<=l;sd++)
-wcount[player][sum2-sd*19]=wcount[player][sum2];
-if(r>0)
-for(int sd=1;sd<=r;sd++)
-wcount[player][sum2+sd*19]=wcount[player][sum2];
+    if (l > 0)
+        for (int sd = 1; sd <= l; sd++)
+            wcount[player][sum2 - sd * 19] = wcount[player][sum2];
+    if (r > 0)
+        for (int sd = 1; sd <= r; sd++)
+            wcount[player][sum2 + sd * 19] = wcount[player][sum2];
 //printf("\n l2=%d r2=%d",l,r);
 
 
-l=0,r=0;//×óĞ±Á¬ 
-if(sum3-19-1>800)
-l=wcount[player][sum3-19-1];
-if(sum3+19+1<=1161)
-r=wcount[player][sum3+19+1];
+    l = 0, r = 0;//å·¦æ–œè¿
+    if (sum3 - 19 - 1 > 800)
+        l = wcount[player][sum3 - 19 - 1];
+    if (sum3 + 19 + 1 <= 1161)
+        r = wcount[player][sum3 + 19 + 1];
 
-if(l>=0)
-wcount[player][sum3]+=l;
-if(r>=0)
-wcount[player][sum3]+=r;
+    if (l >= 0)
+        wcount[player][sum3] += l;
+    if (r >= 0)
+        wcount[player][sum3] += r;
 
-if(l>0)
-for(int sd=1;sd<=l;sd++)
-wcount[player][sum3-sd*19-sd]=wcount[player][sum3];
-if(r>0)
-for(int sd=1;sd<=r;sd++)
-wcount[player][sum3+sd*20]=wcount[player][sum3];
+    if (l > 0)
+        for (int sd = 1; sd <= l; sd++)
+            wcount[player][sum3 - sd * 19 - sd] = wcount[player][sum3];
+    if (r > 0)
+        for (int sd = 1; sd <= r; sd++)
+            wcount[player][sum3 + sd * 20] = wcount[player][sum3];
 //printf("\n l3=%d r3=%d",l,r);
 
-l=0,r=0;//ÓÒĞ±Á¬ 
-if(sum4-19+1>1200)
-l=wcount[player][sum4-19+1];
-if(sum4+19-1<=1560)
-r=wcount[player][sum4+19-1];
-if(l>=0)
-wcount[player][sum4]+=l;
-if(r>=0)
-wcount[player][sum4]+=r;
+    l = 0, r = 0;//å³æ–œè¿
+    if (sum4 - 19 + 1 > 1200)
+        l = wcount[player][sum4 - 19 + 1];
+    if (sum4 + 19 - 1 <= 1560)
+        r = wcount[player][sum4 + 19 - 1];
+    if (l >= 0)
+        wcount[player][sum4] += l;
+    if (r >= 0)
+        wcount[player][sum4] += r;
 
-if(l>0)
-for(int sd=1;sd<=l;sd++)
-wcount[player][sum4-sd*19+sd]=wcount[player][sum4];
-if(r>0)
-for(int sd=1;sd<=r;sd++)
-wcount[player][sum4+sd*18]=wcount[player][sum4];
-
+    if (l > 0)
+        for (int sd = 1; sd <= l; sd++)
+            wcount[player][sum4 - sd * 19 + sd] = wcount[player][sum4];
+    if (r > 0)
+        for (int sd = 1; sd <= r; sd++)
+            wcount[player][sum4 + sd * 18] = wcount[player][sum4];
 //printf("\n l4=%d r4=%d\n",l,r);
-
 }
 
-int Judge(int wcount[][1700], const int player)                   //Ê¤¸ºÅĞ¶Ï
+int Judge(int wcount[][1700], const int player)                   //èƒœè´Ÿåˆ¤æ–­
 {
-	int i;
-	int temp;
-	int anti=1;
-	(anti==player)?(anti=2):(anti=1);
-
-	temp = 0;
-	for(i = 1; i <=1600; i++)
-	{
-		if(wcount[player][i] >= 0)
-		{
-			temp++;
-			if(wcount[player][i] >= 6)
-			{
-				return player;
-			}
-		}
-	}
-
-	
-
+    int i;
+    int temp;
+    int anti = 1;
+    (anti == player) ? (anti = 2) : (anti = 1);
+    temp = 0;
+    for (i = 1; i <= 1600; i++) {
+        if (wcount[player][i] >= 0) {
+            temp++;
+            if (wcount[player][i] >= 6) {
+                return player;
+            }
+        }
+    }
 }
 
 
 
 
-/*****************************************************************************************************/           //AIºËĞÄ
+/*****************************************************************************************************/           //AIæ ¸å¿ƒ
 
-void Grade(const int board[][20], const int wcount[][1700], int table[][20], const int ply,ranseti gene )         //ÆåÅÌÆÀ·ÖµÄ³ÌĞò£¬¸øÓèÆåÅÌÃ¿¸öµãÒ»¶¨µÄ·ÖÊı
+void Grade(const int board[][20], const int wcount[][1700], int table[][20], const int ply,
+           ranseti gene)         //æ£‹ç›˜è¯„åˆ†çš„ç¨‹åºï¼Œç»™äºˆæ£‹ç›˜æ¯ä¸ªç‚¹ä¸€å®šçš„åˆ†æ•°
 {
-	int x, y, k,r=0,l=0,sum1,sum2,sum3,sum4;
-	int temp = 0;
-	int anti=1;
-	int player=ply;int heng,zong,zuo,you;
-	(anti==ply)?(anti=2):(anti=1);
-/*ÁùÁ¬=888888(¼«Öµ)£¬»îÎå=2500£¬³åÎå=600£¬Ë«»îËÄ=400
-µ¥»îËÄ¼Ó200£¬Ã¿¸öÃßËÄ¼Ó100£¬Ã¿¸ö»îÈı¼Ó50£¬Ã¿¸öÃßÈı¼Ó10
-Ã¿¸ö»î¶ş¼Ó4£¬ Ã¿¸öÃß¶ş¼Ó1*/
+    int x, y, k, r = 0, l = 0, sum1, sum2, sum3, sum4;
+    int temp = 0;
+    int anti = 1;
+    int player = ply;
+    int heng, zong, zuo, you;
+    (anti == ply) ? (anti = 2) : (anti = 1);
+/*å…­è¿=888888(æå€¼)ï¼Œæ´»äº”=2500ï¼Œå†²äº”=600ï¼ŒåŒæ´»å››=400
+å•æ´»å››åŠ 200ï¼Œæ¯ä¸ªçœ å››åŠ 100ï¼Œæ¯ä¸ªæ´»ä¸‰åŠ 50ï¼Œæ¯ä¸ªçœ ä¸‰åŠ 10
+æ¯ä¸ªæ´»äºŒåŠ 4ï¼Œ æ¯ä¸ªçœ äºŒåŠ 1*/
 // huowu 12  chongwu 9 shuanghuosi 9  danhuosi 8 miansi 7  huosan 6 miansan 4  huoer 3
+    for (x = 1; x <= 19; x++) {
+
+        for (y = 1; y <= 19; y++) {
+
+            heng = 1, zong = 1, zuo = 1, you = 1;
+            //printf("\n%d%d%d%d",y,y,y,y);
+
+            if (board[x][y] == 0) {//printf("\n%d%d%d%d",y,y,y,y);
+                sum1 = (y - 1) * 19 + x, sum2 = 19 * (y - 1) + x + 400, sum3 = 19 * (y - 1) + x + 800, sum4 =
+                        19 * (y - 1) + x + 1200;
+
+                l = 0, r = 0;//æ¨ªè¿
+                if (x - 1 > 0)
+                    l = wcount[ply][sum1 - 1];
+                if (x + 1 <= 19)
+                    r = wcount[player][sum1 + 1];
+                if (l > 0)
+                    heng += l;
+                if (r > 0)
+                    heng += r;
+                temp = 0;
+                int sub = 0;
+                for (int k = 1; k <= 6 - heng; k++) {
 
 
+                    if (l >= 0)
+                        if ((wcount[player][sum1 - l - k] < 0 || (x - l - k) == 0))//å·¦è¾¹ç•Œ
+                        {
+                            sub++;
 
+                        }
+                    if (r >= 0)
+                        if (wcount[player][sum1 + k + r] < 0 || (x + r + k) == 19)//å³è¾¹ç•Œ
+                        {
+                            sub++;
 
-	for(x =1 ;x <= 19; x++)
-	{
-		
-		for(y = 1; y <= 19; y++)
-		{
-			
-			heng=1,zong=1,zuo=1,you=1;
-			//printf("\n%d%d%d%d",y,y,y,y);
-			
-			if(board[x][y]==0)
-
-           {//printf("\n%d%d%d%d",y,y,y,y);
-           	       sum1=(y-1)*19+x,sum2=19*(y-1)+x+400,sum3=19*(y-1)+x+800,sum4=19*(y-1)+x+1200;
-           	     
-					l=0,r=0;//ºáÁ¬ 
-                   if(x-1>0)
-                    l=wcount[ply][sum1-1];
-                    if(x+1<=19)
-                    r=wcount[player][sum1+1];
-                    if(l>0)
-                    heng+=l;
-                    if(r>0)
-                    heng+=r;
-                    
-               temp=0;
-			   
-	
-			   	int sub=0;
-			   for(int k=1;k<=6-heng;k++)
-			   {
-			  
-			   
-				   	if(l>=0)
-			   	if((wcount[player][sum1-l-k]<0||(x-l-k)==0))//×ó±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   if(r>=0)
-				   if(wcount[player][sum1+k+r]<0||(x+r+k)==19)//ÓÒ±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   
-				   if(sub==0)
-				   {
-				   	temp=0;
-				   }
-				   else if(sub==1)
-				   temp=1;
-				   else temp=9;
-			
-			   }
-			   
-			   
-			       
-
-
-
-if(heng<=6)
-switch(heng)
-{
-case 1:table[x][y] += 0;break;
-case 2:
-if(temp == 0)
-							table[x][y] += gene.huoer;
-						else if(temp == 1)
-							table[x][y] += 1;
-							else if(temp==9)
-							table[x][y] += -10;
-						
-						break;
-					case 3:
-						if(temp == 0)
-							table[x][y] += gene.huosan;
-						else if(temp==1)
-							table[x][y] += gene.miansan;
-						else if(temp==9)
-							table[x][y] += -10;
-						break;
-					case 4:
-						if(temp == 0)
-						{
-							table[x][y] += gene.shuanghuosi;
-							break;
-						}
-						if(temp == 1)
-						{
-							table[x][y] += gene.danhuosi;
-							break;
-						}
-						else if(temp==9)
-						{
-								table[x][y] += -10;break;}
-									break;
-					case 5:
-						if(temp == 0)
-							table[x][y] += gene.huowu;
-						else if(temp==1)
-							table[x][y] += gene.chongwu;
-							else if(temp==9)
-							{
-								table[x][y] += -10;}
-								break;
-					case 6:
-						table[x][y] += 8888888;
-						break;
-					default:
-						;
-					}
-				
-if(heng>=7) table[x][y]+=8888888;
+                        }
+                    if (sub == 0) {
+                        temp = 0;
+                    } else if (sub == 1)
+                        temp = 1;
+                    else temp = 9;
+                }
+                if (heng <= 6)
+                    switch (heng) {
+                        case 1:
+                            table[x][y] += 0;
+                            break;
+                        case 2:
+                            if (temp == 0)
+                                table[x][y] += gene.huoer;
+                            else if (temp == 1)
+                                table[x][y] += 1;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 3:
+                            if (temp == 0)
+                                table[x][y] += gene.huosan;
+                            else if (temp == 1)
+                                table[x][y] += gene.miansan;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 4:
+                            if (temp == 0) {
+                                table[x][y] += gene.shuanghuosi;
+                                break;
+                            }
+                            if (temp == 1) {
+                                table[x][y] += gene.danhuosi;
+                                break;
+                            } else if (temp == 9) {
+                                table[x][y] += -10;
+                                break;
+                            }
+                            break;
+                        case 5:
+                            if (temp == 0)
+                                table[x][y] += gene.huowu;
+                            else if (temp == 1)
+                                table[x][y] += gene.chongwu;
+                            else if (temp == 9) {
+                                table[x][y] += -10;
+                            }
+                            break;
+                        case 6:
+                            table[x][y] += 8888888;
+                            break;
+                        default:;
+                    }
+                if (heng >= 7) table[x][y] += 8888888;
 //if(l>=3||r>=3)
 //printf("\nl1=%d   r1=%d \n",l,r);
 //printf("\nheng  %d",heng);
-
- //printf("\n\n\n 3 table[x][y]=%d ",table[x][y]) ; 
-
-
-
-
-
-l=0,r=0;//×İÁ¬ 
-if(y-1>0)
-l=wcount[player][sum2-19];
-if(y+1<20)
-r=wcount[player][sum2+19];
+                //printf("\n\n\n 3 table[x][y]=%d ",table[x][y]) ;
+                l = 0, r = 0;//çºµè¿
+                if (y - 1 > 0)
+                    l = wcount[player][sum2 - 19];
+                if (y + 1 < 20)
+                    r = wcount[player][sum2 + 19];
 //if(l>=1||r>=1)
 //printf("\nl2=%d   r2=%d \n",l,r);
-  if(l>=0)
-zong+=l;
-if(r>=0)
-zong+=r;
+                if (l >= 0)
+                    zong += l;
+                if (r >= 0)
+                    zong += r;
+                sub = 0;
+                for (int k = 1; k <= 6 - zong; k++)
+                    if ((6 - zong) > 0) {
 
+                        if (l >= 0)
+                            if ((wcount[player][sum2 - l * 19 - k * 19] < 0 || (y - l - k) == 0))//å·¦è¾¹ç•Œ
+                            {
+                                sub++;
 
- sub=0;
- for(int k=1;k<=6-zong;k++)
-		if((6-zong)>0)	   {
-			   	
-			   	if(l>=0)
-			   	if((wcount[player][sum2-l*19-k*19]<0||(y-l-k)==0))//×ó±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   if(r>=0)
-				   if(wcount[player][sum2+k*19+r*19]<0||(y+r+k)==19)//ÓÒ±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   
-				   if(sub==0)
-				   {
-				   	temp=0;
-				   }
-				   else if(sub==1)
-				   temp=1;
-				   else temp=9;
-				   
-			   }
+                            }
+                        if (r >= 0)
+                            if (wcount[player][sum2 + k * 19 + r * 19] < 0 || (y + r + k) == 19)//å³è¾¹ç•Œ
+                            {
+                                sub++;
 
+                            }
+                        if (sub == 0) {
+                            temp = 0;
+                        } else if (sub == 1)
+                            temp = 1;
+                        else temp = 9;
 
+                    }
+                if (zong <= 6)
+                    switch (zong) {
+                        case 1:
+                            table[x][y] += 0;
+                            break;
+                        case 2:
+                            if (temp == 0)
+                                table[x][y] += gene.huoer;
+                            else if (temp == 1)
+                                table[x][y] += 1;
+                            else if (temp == 9)
+                                table[x][y] += -10;
 
+                            break;
+                        case 3:
+                            if (temp == 0)
+                                table[x][y] += gene.huosan;
+                            else if (temp == 1)
+                                table[x][y] += gene.miansan;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 4:
+                            if (temp == 0) {
+                                table[x][y] += gene.shuanghuosi;
+                                break;
+                            }
+                            if (temp == 1) {
+                                table[x][y] += gene.danhuosi;
+                                break;
+                            } else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 5:
+                            if (temp == 0)
+                                table[x][y] += gene.huowu;
+                            else if (temp == 1)
+                                table[x][y] += gene.chongwu;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
 
-if(zong<=6)
-           switch(zong)
-					{
-						case 1:table[x][y] += 0;break;
-					case 2:
-						if(temp == 0)
-							table[x][y] += gene.huoer;
-						else if(temp == 1)
-							table[x][y] += 1;
-							else if(temp==9)
-							table[x][y] += -10;
-						
-						break;
-					case 3:
-						if(temp == 0)
-							table[x][y] += gene.huosan;
-						else if(temp==1)
-							table[x][y] += gene.miansan;
-							else if(temp==9)
-							table[x][y] += -10;
-						break;
-					case 4:
-						if(temp == 0)
-						{
-							table[x][y] += gene.shuanghuosi;
-							break;
-						}
-						if(temp == 1)
-						{
-							table[x][y] += gene.danhuosi;
-							break;
-						}
-						else if(temp==9)
-							table[x][y] += -10;
-							break;
-					case 5:
-						if(temp == 0)
-							table[x][y] += gene.huowu;
-						else if(temp==1)
-							table[x][y] += gene.chongwu;
-							else if(temp==9)
-							table[x][y] += -10;
-							break;
-							
-					case 6:
-						table[x][y] += 8888888;
-						break;
-					default:
-						;
-					}
-				
-if(zong>=7) table[x][y]+=8888888;
+                        case 6:
+                            table[x][y] += 8888888;
+                            break;
+                        default:;
+                    }
+                if (zong >= 7) table[x][y] += 8888888;
 //if((x-1+'A')=='B'&&(y-1+'A')=='F')
 //printf("\n BF=zong  %d",zong);
 //if((x-1+'A')=='B'&&(y-1+'A')=='J'&&board[2][6]!=0)
@@ -435,59 +377,45 @@ if(zong>=7) table[x][y]+=8888888;
 
 //if(l>=3||r>=3)
 //printf("\nl2=%d   r2=%d \n",l,r);
- //printf("\n 4 table[x][y]=%d ",table[x][y]) ; 
+                //printf("\n 4 table[x][y]=%d ",table[x][y]) ;
+                l = 0, r = 0;//å·¦æ–œè¿
+                if ((x - 1) > 0 && (y - 1) > 0)
+                    l = wcount[player][sum3 - 19 - 1];
+                if ((x + 1) <= 19 && (y + 1) <= 19)
+                    r = wcount[player][sum3 + 19 + 1];
+                if (l >= 0)
+                    zuo += l;
+                if (r >= 0)
+                    zuo += r;
+                sub = 0;
+                for (int k = 1; k <= 6 - zuo; k++) {
 
+                    if (l >= 0)
+                        if (wcount[player][sum3 - l * 20 - k * 20] < 0 || ((y - l - k) == 0 && (x - l - k) == 0))//å·¦è¾¹ç•Œ
+                        {
+                            sub++;
 
-           	
-           	
-           	
-           	l=0,r=0;//×óĞ±Á¬ 
-if((x-1)>0&&(y-1)>0)
-l=wcount[player][sum3-19-1];
-if((x+1)<=19&&(y+1)<=19)
-r=wcount[player][sum3+19+1];
- if(l>=0)
-zuo+=l;
-if(r>=0)
-zuo+=r;
+                        }
+                    if (r >= 0)
+                        if (wcount[player][sum3 + k * 20 + r * 20] < 0 || ((y + r + k) == 0 && (x + r + k) == 0))//å³è¾¹ç•Œ
+                        {
+                            sub++;
 
-
-
-
- sub=0;
- for(int k=1;k<=6-zuo;k++)
-			   {
-			   	
-			   	if(l>=0)
-			   	if(wcount[player][sum3-l*20-k*20]<0||((y-l-k)==0&&(x-l-k)==0))//×ó±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   if(r>=0)
-				   if(wcount[player][sum3+k*20+r*20]<0||((y+r+k)==0&&(x+r+k)==0))//ÓÒ±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   
-				   if(sub==0)
-				   {
-				   	temp=0;
-				   }
-				   else if(sub==1)
-				   temp=1;
-				   else temp=9;
-				   
-			   }
-
-
+                        }
+                    if (sub == 0) {
+                        temp = 0;
+                    } else if (sub == 1)
+                        temp = 1;
+                    else temp = 9;
+                }
 //printf("\nl=%d   r=%d \n",l,r);
 /*for(k=1;k<=6-zuo;k++)
 {int sub=0;
-   
+
 	if((wcount[anti][sum3-l*19-k*19-l-k]>0||((x-1)>0&&(y-1)>0)&&wcount[anti][sum3+r*19+k*19+r+k]<=0)||(wcount[anti][sum3+r*20+k*20]>0||((x+1)<=19&&(y+1)<=19)&&wcount[anti][sum3-l*20-k*20]<=0))
 	{
 	if(sub<2)
-	temp=1;//ÃßÆå 
+	temp=1;//çœ æ£‹
 	sub++;
 	}
 	else if(sub>=2)
@@ -497,237 +425,205 @@ break;
 
 }
 
-//ËÀÆå 
+//æ­»æ£‹
 	else
-	temp=0; //»îÆå 
+	temp=0; //æ´»æ£‹
 }*/
-       if(zuo<=6)
-       {
-	   switch(zuo)
-					{
-						case 1:table[x][y] += 0;break;
-					case 2:
-						if(temp == 0)
-							table[x][y] += gene.huoer;
-						else if(temp == 1)
-							table[x][y] += 1;
-							else if(temp==9)
-							table[x][y] += -10;
-						
-						break;
-					case 3:
-						if(temp == 0)
-							table[x][y] += gene.huosan;
-						else if(temp==1)
-							table[x][y] += gene.miansan;
-							else if(temp==9)
-							table[x][y] += -10;
-						break;
-					case 4:
-						if(temp == 0)
-						{
-							table[x][y] += gene.shuanghuosi;
-							break;
-						}
-						if(temp == 1)
-						{
-							table[x][y] += gene.danhuosi;
-							break;
-						}
-						else if(temp==9)
-							table[x][y] += -10;
-								break;
-					case 5:
-						if(temp == 0)
-							table[x][y] += gene.huowu;
-						else if(temp==1)
-							table[x][y] += gene.chongwu;
-							else if(temp==9)
-							table[x][y] += -10;
-								break;
-					case 6:
-						table[x][y] += 8888888;
-						break;
-					default:
-						;
-					}
-				
-			}
-if(zuo>=7) table[x][y]+=8888888;
+                if (zuo <= 6) {
+                    switch (zuo) {
+                        case 1:
+                            table[x][y] += 0;
+                            break;
+                        case 2:
+                            if (temp == 0)
+                                table[x][y] += gene.huoer;
+                            else if (temp == 1)
+                                table[x][y] += 1;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 3:
+                            if (temp == 0)
+                                table[x][y] += gene.huosan;
+                            else if (temp == 1)
+                                table[x][y] += gene.miansan;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 4:
+                            if (temp == 0) {
+                                table[x][y] += gene.shuanghuosi;
+                                break;
+                            }
+                            if (temp == 1) {
+                                table[x][y] += gene.danhuosi;
+                                break;
+                            } else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 5:
+                            if (temp == 0)
+                                table[x][y] += gene.huowu;
+                            else if (temp == 1)
+                                table[x][y] += gene.chongwu;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 6:
+                            table[x][y] += 8888888;
+                            break;
+                        default:;
+                    }
+                }
+                if (zuo >= 7) table[x][y] += 8888888;
 //printf("\nzuo  %d",zuo);
- //printf("\n 5 table[x][y]=%d ",table[x][y]) ; 
+                //printf("\n 5 table[x][y]=%d ",table[x][y]) ;
 //if(l>=3||r>=3)
 //printf("\nl3=%d   r3=%d \n",l,r);
 
-l=0,r=0;//ÓÒĞ±Á¬ 
-if(sum4-19+1>1200)
-{
+                l = 0, r = 0;//å³æ–œè¿
+                if (sum4 - 19 + 1 > 1200) {
 
-l=wcount[player][sum4-18];
+                    l = wcount[player][sum4 - 18];
 //printf("\nl=%d",l);
-}
-if(sum4+19-1<1560)
-{
-r=wcount[player][sum4+18];
+                }
+                if (sum4 + 19 - 1 < 1560) {
+                    r = wcount[player][sum4 + 18];
 //printf("\nr=%d",r);
-}
-  if(l>=0)
-you+=l;
-if(r>=0)
-you+=r;
-
-
+                }
+                if (l >= 0)
+                    you += l;
+                if (r >= 0)
+                    you += r;
 //printf("\nl4=%d r4=%d ",l,r);
 
- sub=0;
- for(int k=1;k<=6-you;k++)
-			   {
-			   	
-			   	if(l>=0)
-			   	if(wcount[player][sum4-l*18-k*18]<0||((y-l-k)==0&&(x+l+k)==0))//×ó±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   if(r>=0)
-				   if(wcount[player][sum4+k*18+r*18]<0||((y+r+k)==0&&(x-r-k)==0))//ÓÒ±ß½ç 
-			   	{sub++;
-			   		
-				   }
-				   
-				   if(sub==0)
-				   {
-				   	temp=0;
-				   }
-				   else if(sub==1)
-				   temp=1;
-				   else temp=9;
-				   
-			   }
+                sub = 0;
+                for (int k = 1; k <= 6 - you; k++) {
 
+                    if (l >= 0)
+                        if (wcount[player][sum4 - l * 18 - k * 18] < 0 || ((y - l - k) == 0 && (x + l + k) == 0))//å·¦è¾¹ç•Œ
+                        {
+                            sub++;
 
+                        }
+                    if (r >= 0)
+                        if (wcount[player][sum4 + k * 18 + r * 18] < 0 || ((y + r + k) == 0 && (x - r - k) == 0))//å³è¾¹ç•Œ
+                        {
+                            sub++;
 
+                        }
+                    if (sub == 0) {
+                        temp = 0;
+                    } else if (sub == 1)
+                        temp = 1;
+                    else temp = 9;
 
+                }
+                if (you <= 6)
+                    switch (you) {
+                        case 1:
+                            table[x][y] += 0;
+                            break;
+                        case 2:
+                            if (temp == 0)
+                                table[x][y] += gene.huoer;
+                            else if (temp == 1)
+                                table[x][y] += 1;
+                            else if (temp == 9)
+                                table[x][y] += -10;
 
-           if(you<=6)
-            switch(you)
-					{
-						case 1:table[x][y] += 0;
-						break;
-					case 2:
-						if(temp == 0)
-							table[x][y] += gene.huoer;
-						else if(temp == 1)
-							table[x][y] += 1;
-							else if(temp==9)
-							table[x][y] +=-10;
-						
-						break;
-					case 3:
-						if(temp == 0)
-							table[x][y] += gene.huosan;
-						else if(temp==1)
-							table[x][y] += gene.miansan;
-							else if(temp==9)
-							table[x][y] += -10;
-						break;
-					case 4:
-						if(temp == 0)
-						{
-							table[x][y] += gene.shuanghuosi;
-							break;
-						}
-						if(temp == 1)
-						{
-							table[x][y] += gene.danhuosi;
-							break;
-						}
-						else if(temp==9)
-							table[x][y] += -10;
-								break;
-					case 5:
-						if(temp == 0)
-							table[x][y] += gene.huowu;
-						else if(temp==1)
-							table[x][y] += gene.chongwu;
-							else if(temp==9)
-							table[x][y] +=-10;
-								break;
-					case 6:
-						table[x][y] += 8888888;
-						break;
-					default:
-						;
-					}
-				
-if(you>=7) table[x][y]+=8888888;
-           	
-  // printf("\nyou %d\n",you);       	
-     //  printf("\n 6 table[x][y]=%d ",table[x][y]) ;  
-	//   if(l>=3||r>=3)
+                            break;
+                        case 3:
+                            if (temp == 0)
+                                table[x][y] += gene.huosan;
+                            else if (temp == 1)
+                                table[x][y] += gene.miansan;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 4:
+                            if (temp == 0) {
+                                table[x][y] += gene.shuanghuosi;
+                                break;
+                            }
+                            if (temp == 1) {
+                                table[x][y] += gene.danhuosi;
+                                break;
+                            } else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 5:
+                            if (temp == 0)
+                                table[x][y] += gene.huowu;
+                            else if (temp == 1)
+                                table[x][y] += gene.chongwu;
+                            else if (temp == 9)
+                                table[x][y] += -10;
+                            break;
+                        case 6:
+                            table[x][y] += 8888888;
+                            break;
+                        default:;
+                    }
+                if (you >= 7) table[x][y] += 8888888;
+                // printf("\nyou %d\n",you);
+                //  printf("\n 6 table[x][y]=%d ",table[x][y]) ;
+                //   if(l>=3||r>=3)
 //printf("\nl4=%d   r4=%d \n",l,r);
 //	 if(x==2&&y==6)
-//	printf("\n x=%c y=%c heng=%d  zong=%d  zuo=%d  you=%d  l4=%d  r4=%d   player=%d  table=%d\n",(x-1+'A'),(y-1+'A'),heng,zong,zuo,you,l,r,player,table[x][y]);	
+//	printf("\n x=%c y=%c heng=%d  zong=%d  zuo=%d  you=%d  l4=%d  r4=%d   player=%d  table=%d\n",(x-1+'A'),(y-1+'A'),heng,zong,zuo,you,l,r,player,table[x][y]);
 //if((x-1+'A')=='B'&&(y-1+'A')=='J'&&board[2][6]!=0)
 ///printf("\n BJ=zong  %d  l=%d  r=%d heng=%d  zuo=%d you=%d table= %d \n",zong,l,r,heng,zuo,you,table[x][y]);
+            }
+        }
+    }
 }
-}}
 
-}
-void Search(int table[][20],  int player, int &x, int &y, int board[][20])       //ËÑË÷º¯Êı ÕÒ³öÆÀ·Ö±íÖĞ·ÖÖµ×î´óµÄÎ»ÖÃ
+void Search(int table[][20], int player, int &x, int &y, int board[][20])       //æœç´¢å‡½æ•° æ‰¾å‡ºè¯„åˆ†è¡¨ä¸­åˆ†å€¼æœ€å¤§çš„ä½ç½®
 {
-	int i, j;
-	int  max;
-	int num = 0, time = 0;
+    int i, j;
+    int max;
+    int num = 0, time = 0;
+    max = 0;
+    for (i = 1; i <= 19; i++) {
+        for (j = 1; j <= 19; j++) {
+            if (!board[i][j] && table[i][j] && table[i][j] > max) {
+                max = table[i][j];
+            }
+        }
+    }
+    if (!board[7][7] && !max) {
+        x = 7;
+        y = 7;
+        return;
+    }
 
-	max = 0;
-	for(i = 1; i <= 19; i++)
-	{
-		for(j = 1; j <= 19; j++)
-		{
-			if(!board[i][j] && table[i][j] && table[i][j] > max)
-			{
-				max = table[i][j];
-			}
-		}
-	}
+    for (i = 1; i <= 19; i++) {
+        for (j = 1; j <= 19; j++) {
+            if (!board[i][j] && table[i][j] == max) {
 
-	if(!board[7][7] && !max)
-	{
-		x =7;
-		y = 7;
-		return;
-	}
-
-	for(i = 1; i <= 19; i++)
-	{
-		for(j = 1; j <= 19; j++)
-		{
-			if(!board[i][j] && table[i][j] == max)
-			{
-			
-				x=i;
-				y=j;
-				break;
-			}
-		}
-	}
+                x = i;
+                y = j;
+                break;
+            }
+        }
+    }
 //	printf("\nmax=%d %c%c \n",max,i+'A'-1,j+'A'-1);
-
 }
 
-void AI(int board[][20], int wcount[][1700], int player,int &winner,ranseti r1)          //AIº¯Êı ÏÈµ÷ÓÃÆÀ·Öº¯Êı£¬¶ÔË«·½ÆåÅÌÆÀ·Ö£¬ ÔÙµ÷ÓÃËÑË÷º¯Êı£¬ÕÒ³ö×îÓÅÎ»ÖÃ
+void AI(int board[][20], int wcount[][1700], int player, int &winner,
+        ranseti r1)          //AIå‡½æ•° å…ˆè°ƒç”¨è¯„åˆ†å‡½æ•°ï¼Œå¯¹åŒæ–¹æ£‹ç›˜è¯„åˆ†ï¼Œ å†è°ƒç”¨æœç´¢å‡½æ•°ï¼Œæ‰¾å‡ºæœ€ä¼˜ä½ç½®
 {
-	int x1_max, y1_max;
-	int x2_max, y2_max;
-	int table_cmp[20][20]={0};
-	int table_ply[20][20]={0};
-int player2;
-
-if(player==1)
-player2=2;
-else
-player2=1;
-winner=0;
+    int x1_max, y1_max;
+    int x2_max, y2_max;
+    int table_cmp[20][20] = {0};
+    int table_ply[20][20] = {0};
+    int player2;
+    if (player == 1)
+        player2 = 2;
+    else
+        player2 = 1;
+    winner = 0;
 /*printf("board=\n");
 for(int i=1;i<=19;i++)
 {printf("\n");
@@ -736,591 +632,506 @@ for(int i=1;i<=19;i++)
 		printf("%d ",board[i][j]);
 	}
 }*/
-	Grade(board, wcount, table_cmp,player ,r1);
-	Grade(board, wcount, table_ply, player2,r1);
+    Grade(board, wcount, table_cmp, player, r1);
+    Grade(board, wcount, table_ply, player2, r1);
 
-	Search(table_cmp, player, x1_max, y1_max, board);
-	Search(table_ply, player2, x2_max, y2_max, board);
-   
-
-	if(table_cmp[x1_max][y1_max] >= table_ply[x2_max][y2_max])
-	{
-		point.x = x1_max;
-		point.y = y1_max;
-	 // Record(board,wcount,player,x1_max,y1_max);//
-	}
-	else
-	{
-		point.x = x2_max;
-		point.y = y2_max;
-	//	  Record(board,wcount,player,x2_max,y2_max);
-	}
-	
-//	printf("\n player==%d  µÄ×î´ótableÖµÎª %d %d\n",player,table_ply[x2_max][y2_max],table_cmp[x1_max][y1_max]) ;
-winner=Judge(wcount,player); 
+    Search(table_cmp, player, x1_max, y1_max, board);
+    Search(table_ply, player2, x2_max, y2_max, board);
 
 
+    if (table_cmp[x1_max][y1_max] >= table_ply[x2_max][y2_max]) {
+        point.x = x1_max;
+        point.y = y1_max;
+        // Record(board,wcount,player,x1_max,y1_max);//
+    } else {
+        point.x = x2_max;
+        point.y = y2_max;
+        //	  Record(board,wcount,player,x2_max,y2_max);
+    }
+
+//	printf("\n player==%d  çš„æœ€å¤§tableå€¼ä¸º %d %d\n",player,table_ply[x2_max][y2_max],table_cmp[x1_max][y1_max]) ;
+    winner = Judge(wcount, player);
 }
-/*ÁùÁ¬=888888(¼«Öµ)£¬»îÎå=2500£¬³åÎå=600£¬Ë«»îËÄ=400
-µ¥»îËÄ¼Ó200£¬Ã¿¸öÃßËÄ¼Ó100£¬Ã¿¸ö»îÈı¼Ó50£¬Ã¿¸öÃßÈı¼Ó10
-Ã¿¸ö»î¶ş¼Ó4£¬ Ã¿¸öÃß¶ş¼Ó1*/
+
+/*å…­è¿=888888(æå€¼)ï¼Œæ´»äº”=2500ï¼Œå†²äº”=600ï¼ŒåŒæ´»å››=400
+å•æ´»å››åŠ 200ï¼Œæ¯ä¸ªçœ å››åŠ 100ï¼Œæ¯ä¸ªæ´»ä¸‰åŠ 50ï¼Œæ¯ä¸ªçœ ä¸‰åŠ 10
+æ¯ä¸ªæ´»äºŒåŠ 4ï¼Œ æ¯ä¸ªçœ äºŒåŠ 1*/
 
 ranseti chongzu[21];
-int Pm(ranseti *gj,int avg,int fmax)//»ùÒò±äÒì¸ÅÂÊ 
-{float pmm;
-		if(gj->shiyingdu<avg)
-	{pmm=0.1;
-	}
-	else if(fmax!=avg)
-	{pmm=0.1-(0.1-0.01)*((float)fmax-(float)gj->shiyingdu)/(fmax-avg);
-	}
-	float p=(rand()%16)*pmm;
-if(p>=1)
-return 1;
-else return 0;
-	
+
+int Pm(ranseti *gj, int avg, int fmax)//åŸºå› å˜å¼‚æ¦‚ç‡
+{
+    float pmm;
+    if (gj->shiyingdu < avg) {
+        pmm = 0.1;
+    } else if (fmax != avg) {
+        pmm = 0.1 - (0.1 - 0.01) * ((float) fmax - (float) gj->shiyingdu) / (fmax - avg);
+    }
+    float p = (rand() % 16) * pmm;
+    if (p >= 1)
+        return 1;
+    else return 0;
+
 }// huowu 12  chongwu 9 shuanghuosi 9  danhuosi 8 miansi 7  huosan 6 miansan 4  huoer 3
-void by(ranseti *g,int avg,int fmax)
-{int p,x=0;
-	for(int i=0;i<12;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->huowu=g->huowu^x+400;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
+void by(ranseti *g, int avg, int fmax) {
+    int p, x = 0;
+    for (int i = 0; i < 12; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
 
-x=0;
-	for(int i=0;i<9;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
 
-g->chongwu=g->chongwu^x+200;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
-x=0;
-	for(int i=0;i<9;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->shuanghuosi=g->shuanghuosi^x+150;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
-x=0;
-	for(int i=0;i<8;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->danhuosi=g->danhuosi^x+80;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
- x=0;
-	for(int i=0;i<7;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->miansi=g->miansi^x+60;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
-x=0;
-	for(int i=0;i<6;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->huosan=g->huosan^x+100;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
- x=0;
-	for(int i=0;i<4;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->miansan=g->miansan^x+40;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
- x=0;
-	for(int i=0;i<3;i++)
-	{p=Pm(g,avg,fmax);
-	x+=p;
-	x<<1;
-	
-	
-	}
-x>>1;
-g->huoer=g->huoer^x;//ÊµÏÖ»ùÒòÍ»±ä£¬ÔËÓÃÊıÑ§µÄ·½·¨
+    }
+    x >> 1;
+    g->huowu = g->huowu ^ x + 400;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
 
- 
+    x = 0;
+    for (int i = 0; i < 9; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+
+    g->chongwu = g->chongwu ^ x + 200;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 9; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->shuanghuosi = g->shuanghuosi ^ x + 150;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 8; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->danhuosi = g->danhuosi ^ x + 80;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 7; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->miansi = g->miansi ^ x + 60;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 6; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->huosan = g->huosan ^ x + 100;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 4; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->miansan = g->miansan ^ x + 40;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
+    x = 0;
+    for (int i = 0; i < 3; i++) {
+        p = Pm(g, avg, fmax);
+        x += p;
+        x << 1;
+    }
+    x >> 1;
+    g->huoer = g->huoer ^ x;//å®ç°åŸºå› çªå˜ï¼Œè¿ç”¨æ•°å­¦çš„æ–¹æ³•
 }
-void bianyi(ranseti *g,int avg,int fmax)//»ùÒò±äÒì 
+
+void bianyi(ranseti *g, int avg, int fmax)//åŸºå› å˜å¼‚
 {
-	
-	by(g,avg,fmax);
+    by(g, avg, fmax);
 }
 
-int pc(int avg,int fmax,int f)//Ã¿ÌõÈ¾É«ÌåµÄ»ùÒòÊÇ·ñ·¢Éú½»²æ»¥»» 
+int pc(int avg, int fmax, int f)//æ¯æ¡æŸ“è‰²ä½“çš„åŸºå› æ˜¯å¦å‘ç”Ÿäº¤å‰äº’æ¢
 {
-	float p=0.7;
-	if(f<avg)
-	p=0.9;
-	else if(fmax!=avg)
-	p=0.9-(float)(0.9-0.6)*(f-avg)/(fmax-avg);
-	float sd;
-	int x=rand()%11;
-sd=p*x;	
-if(sd>=1)
-return 1;
-else return 0;
+    float p = 0.7;
+    if (f < avg)
+        p = 0.9;
+    else if (fmax != avg)
+        p = 0.9 - (float) (0.9 - 0.6) * (f - avg) / (fmax - avg);
+    float sd;
+    int x = rand() % 11;
+    sd = p * x;
+    if (sd >= 1)
+        return 1;
+    else return 0;
 }
-ranseti cz[21]; 
-void exchange(ranseti x,ranseti y,int &num,int avg,int fmax)
+ranseti cz[21];
+void exchange(ranseti x, ranseti y, int &num, int avg, int fmax) {
+    int n = num;
+    int nu = 0;
+    int st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].huowu = y.huowu;
+        cz[n++].huowu = x.huowu;
+        n++;
+
+    } else {
+        cz[n++].huowu = y.huowu;
+        cz[n].huowu = x.huowu;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+
+    if (st == 1) {
+        cz[n].chongwu = y.chongwu;
+        cz[n++].chongwu = x.chongwu;
+        n++;
+    } else {
+        cz[n++].chongwu = y.chongwu;
+        cz[n].chongwu = x.chongwu;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].shuanghuosi = y.shuanghuosi;
+        cz[n++].shuanghuosi = x.shuanghuosi;
+        n++;
+    } else {
+
+        cz[n].shuanghuosi = x.shuanghuosi;
+        cz[n++].shuanghuosi = y.shuanghuosi;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].danhuosi = y.danhuosi;
+        cz[n++].danhuosi = x.danhuosi;
+        n++;
+    } else {
+        cz[n++].danhuosi = y.danhuosi;
+        cz[n].danhuosi = x.danhuosi;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].miansi = y.miansi;
+        cz[n++].miansi = x.miansi;
+        n++;
+    } else {
+        cz[n++].miansi = y.miansi;
+        cz[n].miansi = x.miansi;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].huosan = y.huosan;
+        cz[n++].huosan = x.huosan;
+        n++;
+    } else {
+        cz[n++].huosan = y.huosan;
+        cz[n].huosan = x.huosan;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].miansan = y.miansan;
+        cz[n++].miansan = x.miansan;
+        n++;
+    } else {
+        cz[n++].miansan = y.miansan;
+        cz[n].miansan = x.miansan;
+        n++;
+    }
+    n -= 2;
+    st = pc(avg, fmax, x.shiyingdu);
+    if (st == 1) {
+        cz[n].huoer = y.huoer;
+        cz[n++].huoer = x.huoer;
+        n++;
+    } else {
+        cz[n++].huoer = y.huoer;
+        cz[n].huoer = x.huoer;
+        n++;
+    }
+    num = n;
+}
+
+
+void Cz(ranseti gj[], int avg, int i, int fmax)//å¼€å§‹åŸºå› é‡ç»„
 {
-int n=num;int nu=0;
-int st=pc(avg,fmax,x.shiyingdu);
-	
-if(st==1)
-{cz[n].huowu=y.huowu;
-cz[n++].huowu=x.huowu;
-n++;
-
-}	
-
-else{
-	cz[n++].huowu=y.huowu;
-cz[n].huowu=x.huowu;
-n++;
-
-}
-n-=2;
-st=pc(avg,fmax,x.shiyingdu);
-
-if(st==1)
-{cz[n].chongwu=y.chongwu;
-cz[n++].chongwu=x.chongwu;
-n++;
-
-}
-else{
-	cz[n++].chongwu=y.chongwu;
-cz[n].chongwu=x.chongwu;
-n++;
-
+    int num = 1;
+    int nu = 0;
+    for (int i = 1; i <= 5; i++) {
+        for (int j = i + 1; j <= 5; j++) {
+            exchange(gj[i], gj[j], num, avg, fmax);//æ¯ä¸¤ä¸ªä¸åŒçš„æŸ“è‰²ä½“å¼€å§‹äº¤å‰
+        }
+    }
 }
 
-n-=2;
-
-st=pc(avg,fmax,x.shiyingdu);
-
-if(st==1)
-{
-cz[n].shuanghuosi=y.shuanghuosi;
-cz[n++].shuanghuosi=x.shuanghuosi;
-n++;
-
-}
-else{
-
-cz[n].shuanghuosi=x.shuanghuosi;
-	cz[n++].shuanghuosi=y.shuanghuosi;
-
-n++;
-}
-n-=2;
-
-st=pc(avg,fmax,x.shiyingdu);
-if(st==1)
-{cz[n].danhuosi=y.danhuosi;
-cz[n++].danhuosi=x.danhuosi;
-n++;
-}
-else{
-	cz[n++].danhuosi=y.danhuosi;
-cz[n].danhuosi=x.danhuosi;
-n++;
-}
-n-=2;
-st=pc(avg,fmax,x.shiyingdu);
-if(st==1)
-{cz[n].miansi=y.miansi;
-cz[n++].miansi=x.miansi;
-n++;
-}
-else{
-	cz[n++].miansi=y.miansi;
-cz[n].miansi=x.miansi;
-n++;
-}
-n-=2;
-st=pc(avg,fmax,x.shiyingdu);
-if(st==1)
-{cz[n].huosan=y.huosan;
-cz[n++].huosan=x.huosan;
-n++;
-}
-else{
-	cz[n++].huosan=y.huosan;
-cz[n].huosan=x.huosan;
-n++;
-}
-n-=2;
-st=pc(avg,fmax,x.shiyingdu);
-if(st==1)
-{cz[n].miansan=y.miansan;
-cz[n++].miansan=x.miansan;
-n++;
-}
-else{
-	cz[n++].miansan=y.miansan;
-cz[n].miansan=x.miansan;
-n++;
+int max(ranseti sb[]) {
+    int ma = 0;
+    for (int i = 1; i <= 5; i++) {
+        if (ma <= sb[i].shiyingdu) {
+            ma = sb[i].shiyingdu;
+        }
+    }
+    return ma;
 }
 
-n-=2;
-st=pc(avg,fmax,x.shiyingdu);
-if(st==1)
-{cz[n].huoer=y.huoer;
-cz[n++].huoer=x.huoer;
-n++;
-}
-else{
-	cz[n++].huoer=y.huoer;
-cz[n].huoer=x.huoer;
-n++;
-}
-num=n;
-
-}
+void jiaocha(ranseti gj[], int avg) {
+    int nu = 0;
+    int fmax = max(gj);//æ‰¾åˆ°é€‚åº”åº¦æœ€å¤§å€¼
+    for (int i = 1; i <= 5; i++)//å† å†›æŸ“è‰²ä½“å¼€å§‹å˜å¼‚
+    {
+        bianyi(&gj[i], avg, fmax);
 
 
-void Cz(ranseti gj[],int avg,int i,int fmax)//¿ªÊ¼»ùÒòÖØ×é 
-{int num=1;
-int nu=0;
-	for(int i=1;i<=5;i++)
-	{
-		for(int j=i+1;j<=5;j++)
-		{
-			exchange(gj[i],gj[j],num,avg,fmax);//Ã¿Á½¸ö²»Í¬µÄÈ¾É«Ìå¿ªÊ¼½»²æ 
-		}
-	}
-}
-int max(ranseti sb[])
-{
-	int ma=0;
-	for(int i=1;i<=5;i++)
-	{
-		if(ma<=sb[i].shiyingdu)
-		{ma=sb[i].shiyingdu;
-		}
-	}
-	return ma;
-	
- } 
+        Cz(gj, avg, i, fmax);//åŸºå› é‡ç»„
+        //	printf("%d ",nu++);
 
-void jiaocha(ranseti gj[],int avg)
-{int nu=0;
-	int fmax=max(gj);//ÕÒµ½ÊÊÓ¦¶È×î´óÖµ
-	
-	for(int i=1;i<=5;i++)//¹Ú¾üÈ¾É«Ìå¿ªÊ¼±äÒì 
-	{
-		bianyi(&gj[i],avg,fmax);
-		
-		
-		
-			Cz(gj,avg,i,fmax);//»ùÒòÖØ×é 
-		//	printf("%d ",nu++);
-			
-	}
-	
-	for(int i=1;i<=20;i++)//Éú³ÉĞÂÒ»´úÈ¾É«Ìå 
-	{
-		memcpy(&ra[i],&cz[i],sizeof(ra[i]));
-	}
-
+    }
+    for (int i = 1; i <= 20; i++)//ç”Ÿæˆæ–°ä¸€ä»£æŸ“è‰²ä½“
+    {
+        memcpy(&ra[i], &cz[i], sizeof(ra[i]));
+    }
 }
 
+int bisai(ranseti ra1, ranseti ra2, int board[][20], int wcount[][1700]) {
+    int num = 50;
+    int flag = 0;
+    int board1[20][20], wcount1[3][1700], wcount2[3][1700];
+    record(board, board1, wcount, wcount1);
+    record(board, board1, wcount, wcount2);
+    int winner1 = 0, winner2 = 0;
+    while (num--) {
+        int winner1 = 0, winner2 = 0;
+        AI(board1, wcount1, 1, winner1, ra1);
+        //	printf("\n%d ",winner1);
+        Record(board1, wcount1, 1, point.x, point.y);
+        if (winner1) {
+            flag = 1;
+            break;
+        }
 
-int bisai(ranseti ra1,ranseti ra2,int board[][20],int wcount[][1700])
-{int num=50;
-int flag=0;
-int board1[20][20],wcount1[3][1700],wcount2[3][1700]; 
-record(board,board1,wcount,wcount1);
-record(board,board1,wcount,wcount2);
-int winner1=0,winner2=0;
-
-	while(num--)
-	{int winner1=0,winner2=0;
-	
-
-			AI(board1, wcount1,1, winner1,ra1);
-			//	printf("\n%d ",winner1);
-			Record(board1,wcount1,1,point.x,point.y);
-			if(winner1)
-			{flag=1;
-			break;
-			}
-			
-				AI(board1, wcount2, 2, winner2,ra2);
-					Record(board1,wcount2,2,point.x,point.y);
-				if(winner2)
-			{flag=2;
-			break;
-			}
-	}
-	if(flag==1)
-	return 1;//ra1Ó® 
-	else if(flag==2)
-	return 2;//ra2Ó® 
-	else if(flag==0)
-	return 0;//Æ½¾Ö 
- } 
- 
- void guanjun(ranseti ra[20])
-{ranseti a[21];
-ranseti b,c;
-for(int i=1;i<20;i++)
-{
-	memcpy(&a[i],&ra[i],sizeof(a[i]));
-}
-	for(int i=1;i<=20;i++)
-	{
-	
-		for(int j=i+1;j<=20;j++)
-		{
-		if(a[i].shiyingdu<a[j].shiyingdu)
-		{
-			memcpy(&b,&a[i],sizeof(b));
-			memcpy(&c,&a[j],sizeof(c));
-			memcpy(&a[i],&c,sizeof(a[i]));
-			memcpy(&a[j],&b,sizeof(a[j]));
-			}	
-		}
-	}
-	for(int j=1;j<=5;j++)
-memcpy(&gj[j],&a[j],sizeof(gj[j]));
+        AI(board1, wcount2, 2, winner2, ra2);
+        Record(board1, wcount2, 2, point.x, point.y);
+        if (winner2) {
+            flag = 2;
+            break;
+        }
+    }
+    if (flag == 1)
+        return 1;//ra1èµ¢
+    else if (flag == 2)
+        return 2;//ra2èµ¢
+    else if (flag == 0)
+        return 0;//å¹³å±€
 }
 
-void jingsai(int board1[][20],int wcount1[][1700],int player)
-{int nu=0;
-	int jieguo1=0,jieguo2=0;
-	for(int i=1;i<=4;i++)//20×éÈ¾É«Ìå·Ö³ÉÎå×é£¬Ã¿×éËÄ¸ö£¬ÕâËÄ¸öÈ¾É«Ìå½øĞĞ±È½Ï¡£ 
-	{
-	for(int j=i;j<=20;j+=4){
-	for(int k=j+1;k<=j+3;k++)
-	{
-	
-	jieguo1=bisai(ra[j],ra[k],board1,wcount1);
-	jieguo2=bisai(ra[k],ra[j],board1,wcount1);
-	if(jieguo1==0)
-	{
-		ra[j].shiyingdu+=25;
-		ra[k].shiyingdu+=25;
-	}
-	else if(jieguo1==1)
-	{ra[j].shiyingdu+=50;
-	ra[k].shiyingdu+=0;
-	}
-		else if(jieguo1==2)
-	{ra[k].shiyingdu+=50;
-	ra[j].shiyingdu+=0;
-	}
-	
-		if(jieguo2==0)
-	{
-		ra[j].shiyingdu+=25;
-		ra[k].shiyingdu+=25;
-	}
-	else if(jieguo2==1)
-	{ra[j].shiyingdu+=50;
-	ra[k].shiyingdu+=0;
-	}
-		else if(jieguo2==2)
-	{ra[k].shiyingdu+=50;
-	ra[j].shiyingdu+=0;
-	}
-	
-	}}
-	
-	}
+void guanjun(ranseti ra[20]) {
+    ranseti a[21];
+    ranseti b, c;
+    for (int i = 1; i < 20; i++) {
+        memcpy(&a[i], &ra[i], sizeof(a[i]));
+    }
+    for (int i = 1; i <= 20; i++) {
 
-	int avg=0,num=0;
-	for(int i=1;i<=20;i++)
-	num+=ra[i].shiyingdu;
-	avg=num/20;
-	guanjun(ra);//µÃ³ö¹Ú¾üµÄÎå¸öĞòÁĞ£»
-	
-	jiaocha(gj,avg); //
-
-	
+        for (int j = i + 1; j <= 20; j++) {
+            if (a[i].shiyingdu < a[j].shiyingdu) {
+                memcpy(&b, &a[i], sizeof(b));
+                memcpy(&c, &a[j], sizeof(c));
+                memcpy(&a[i], &c, sizeof(a[i]));
+                memcpy(&a[j], &b, sizeof(a[j]));
+            }
+        }
+    }
+    for (int j = 1; j <= 5; j++)
+        memcpy(&gj[j], &a[j], sizeof(gj[j]));
 }
 
-void record(int board[][20],int board1[][20],int wcount[][1700],int wcount1[][1700])
-{
-	memcpy(board1,board,sizeof(int)*20*20);
-		memcpy(wcount1,wcount,sizeof(int)*3*1700);
+void jingsai(int board1[][20], int wcount1[][1700], int player) {
+    int nu = 0;
+    int jieguo1 = 0, jieguo2 = 0;
+    for (int i = 1; i <= 4; i++)//20ç»„æŸ“è‰²ä½“åˆ†æˆäº”ç»„ï¼Œæ¯ç»„å››ä¸ªï¼Œè¿™å››ä¸ªæŸ“è‰²ä½“è¿›è¡Œæ¯”è¾ƒã€‚
+    {
+        for (int j = i; j <= 20; j += 4) {
+            for (int k = j + 1; k <= j + 3; k++) {
+
+                jieguo1 = bisai(ra[j], ra[k], board1, wcount1);
+                jieguo2 = bisai(ra[k], ra[j], board1, wcount1);
+                if (jieguo1 == 0) {
+                    ra[j].shiyingdu += 25;
+                    ra[k].shiyingdu += 25;
+                } else if (jieguo1 == 1) {
+                    ra[j].shiyingdu += 50;
+                    ra[k].shiyingdu += 0;
+                } else if (jieguo1 == 2) {
+                    ra[k].shiyingdu += 50;
+                    ra[j].shiyingdu += 0;
+                }
+
+                if (jieguo2 == 0) {
+                    ra[j].shiyingdu += 25;
+                    ra[k].shiyingdu += 25;
+                } else if (jieguo2 == 1) {
+                    ra[j].shiyingdu += 50;
+                    ra[k].shiyingdu += 0;
+                } else if (jieguo2 == 2) {
+                    ra[k].shiyingdu += 50;
+                    ra[j].shiyingdu += 0;
+                }
+            }
+        }
+    }
+    int avg = 0, num = 0;
+    for (int i = 1; i <= 20; i++)
+        num += ra[i].shiyingdu;
+    avg = num / 20;
+    guanjun(ra);//å¾—å‡ºå† å†›çš„äº”ä¸ªåºåˆ—ï¼›
+
+    jiaocha(gj, avg); //
 }
-void yichuan(int board[][20],int wcount[][1700],int daishu,int winner,int player)
-{
-	int wcount1[3][1700];
-	int board1[20][20];
-	record(board,board1,wcount,wcount1);//¿½±´ÆåÅÌ¼ÇÂ¼ 
+
+void record(int board[][20], int board1[][20], int wcount[][1700], int wcount1[][1700]) {
+    memcpy(board1, board, sizeof(int) * 20 * 20);
+    memcpy(wcount1, wcount, sizeof(int) * 3 * 1700);
+}
+
+void yichuan(int board[][20], int wcount[][1700], int daishu, int winner, int player) {
+    int wcount1[3][1700];
+    int board1[20][20];
+    record(board, board1, wcount, wcount1);//æ‹·è´æ£‹ç›˜è®°å½•
 //	printf("std");
 //int num=0;
-	while(daishu--)//½ø»¯¶àÉÙ´ú 
-	{
-		jingsai(board1,wcount1,player);
-		 
-	}
-	
-	
-}
-void renji()  
-{int winner = 0;	char message[256];int num=0;
-int player = 0;          //ÆåÊÖ 1±íÊ¾¼× 2±íÊ¾ÒÒ
-		//int step_num = 0; //²½Êı¼ÇÂ¼
-		int board[20][20]={{0}};        //ÆåÅÌ¼ÇÂ¼
-		int wcount[3][1700]={{0}};
-	int anti=0;
-
-		int i = 15;
-int daishu=50;
-ranseti r;
-int x1,y1,x2,y2;
-char xs1,xs2,ys1,ys2;	
-	while(1)
-	{fflush(stdout);
-	
-		 //¼ÇÂ¼ÓÎÏ·ÖĞµÄÊ¤Õß  0±íÊ¾ÎŞÊ¤Õß 1±íÊ¾¼×Ê¤ 2±íÊ¾ÒÒÊ¤ 3±íÊ¾Æ½¾Ö
-		
-
-	
-	scanf("%s",message);
-	if(strcmp(message,"move")==0)
-	{
-		scanf("%s",message);
-		fflush(stdin);
-		x1=message[0]-'A'+1;
-		y1=message[1]-'A'+1;
-		x2=message[2]-'A'+1;
-		y2=message[3]-'A'+1;
-		
-	
-//	printf("%d %d %d %d \n",x1,y1,x2,y2);
-		
-         	Record(board,wcount,anti,x1,y1);
-			 Record(board,wcount,anti,x2,y2);
-			yichuan(board,wcount,daishu,winner,anti);
-			
-			
-			
-			
-		//	memcpy(&r,&ra[1],sizeof(r));
-			
-			memcpy(&r,&gj[2],sizeof(r));
-			
-				AI(board, wcount, player, winner,r);//´ı¶¨ 
-		      Record(board,wcount,player,point.x,point.y);
-		       xs1=point.x+'A'-1;
-		       ys1=point.y+'A'-1;
-		       AI(board, wcount, player, winner,r);//´ı¶¨ 
-		      Record(board,wcount,player,point.x,point.y);
-		        xs2=point.x+'A'-1;
-		       ys2=point.y+'A'-1; //printf(" %d",num++);
-		       		//	printf("\n¹Ú¾üÊı×é È¾É«ÌåÖµÎª£º%d %d %d %d %d %d  \n",gj[2].huowu,gj[2].chongwu,gj[2].shuanghuosi,gj[2].huosan,gj[2].huoer,gj[2].shiyingdu);
-
-         printf("\n");    printf("move %c%c%c%c\n",xs1,ys1,xs2,ys2);
-           
-		
-}
-else if(strcmp(message,"new")==0)
-{
-
-	scanf("%s",message);
-	fflush(stdin);
-	if(strcmp(message,"black")==0)
-	{
-	anti=2;player=1;}
-	else {
-	player=2;anti=1;}
-	Init(board,wcount);
-	if(player==1)
-	{char s1='A'+7,s2='A'+7;
-	Record(board,wcount,player,7,7);
-	   printf("\n");	printf("move GG@@\n");
-		
-	}
-}
-else if(strcmp(message,"error")==0)//×Å·¨´íÎó?
-{
-fflush(stdin);
- } 
- else if(strcmp(message,"name?")==0)//Ñ¯ÎÊÒıÇæÃû³Æ
- {
- fflush(stdin);
- 	printf("name Parsifal\n");
- 	
-  } 
-  else if(strcmp(message,"end")==0)//¶Ô¾Ö½áÊø
-  {
-  	fflush(stdin);
-   } 
-    else if(strcmp(message,"quit")==0)
+    while (daishu--)//è¿›åŒ–å¤šå°‘ä»£
     {
-   	fflush(stdin);
-    	printf("Quit!\n");
-    	break;
-	}
-	
-	//printf("\n%d ",winner);
-	
-	}
-}
-/**************************************************************************************************************/
-int main()   //Ö÷º¯Êı
-{srand((unsigned)time(NULL));
-	for(int i=1;i<=20;i++)//¸ø20×éÈ¾É«Ìå¶¨³õÖµ 
-{i1+=100;
-i2+=20;i1+=16;
-i1+=8;i1+=4;
-i1+=2;i1+=1;i1+=1;
-	huowu[i]=i1;
-	chongwu[i]=i2;
-	shuanghuosi[i]=i3;
-	danhuosi[i]=i4;
-	miansi[i]=i5;
-	huosan[i]=i6;
-	miansan[i]=i7;
-	huoer[i]=i8;
-	ra[i].chongwu=	chongwu[i];
-	ra[i].huowu=huowu[i];
-	ra[i].shuanghuosi=shuanghuosi[i];
-	ra[i].danhuosi=danhuosi[i];
-	ra[i].miansi=miansi[i];
-	ra[i].huoer=huoer[i];
-	ra[i].huosan=huosan[i];
-	ra[i].miansan=miansan[i];
+        jingsai(board1, wcount1, player);
+
+    }
 }
 
-memcpy(&gj[1],&ra[1],sizeof(ra[1]));
-memcpy(&gj[2],&ra[2],sizeof(ra[2]));
-memcpy(&gj[3],&ra[3],sizeof(ra[3]));
-memcpy(&gj[4],&ra[4],sizeof(ra[4]));
-memcpy(&gj[5],&ra[5],sizeof(ra[5]));
-	renji();
-	
+void renji() {
+    int winner = 0;
+    char message[256];
+    int num = 0;
+    int player = 0;          //æ£‹æ‰‹ 1è¡¨ç¤ºç”² 2è¡¨ç¤ºä¹™
+    //int step_num = 0; //æ­¥æ•°è®°å½•
+    int board[20][20] = {{0}};        //æ£‹ç›˜è®°å½•
+    int wcount[3][1700] = {{0}};
+    int anti = 0;
+    int i = 15;
+    int daishu = 50;
+    ranseti r;
+    int x1, y1, x2, y2;
+    char xs1, xs2, ys1, ys2;
+    while (1) {
+        fflush(stdout);
+        //è®°å½•æ¸¸æˆä¸­çš„èƒœè€…  0è¡¨ç¤ºæ— èƒœè€… 1è¡¨ç¤ºç”²èƒœ 2è¡¨ç¤ºä¹™èƒœ 3è¡¨ç¤ºå¹³å±€
+        scanf("%s", message);
+        if (strcmp(message, "move") == 0) {
+            scanf("%s", message);
+            fflush(stdin);
+            x1 = message[0] - 'A' + 1;
+            y1 = message[1] - 'A' + 1;
+            x2 = message[2] - 'A' + 1;
+            y2 = message[3] - 'A' + 1;
+//	printf("%d %d %d %d \n",x1,y1,x2,y2);
+            Record(board, wcount, anti, x1, y1);
+            Record(board, wcount, anti, x2, y2);
+            yichuan(board, wcount, daishu, winner, anti);
+            //	memcpy(&r,&ra[1],sizeof(r));
+            memcpy(&r, &gj[2], sizeof(r));
+            AI(board, wcount, player, winner, r);//å¾…å®š
+            Record(board, wcount, player, point.x, point.y);
+            xs1 = point.x + 'A' - 1;
+            ys1 = point.y + 'A' - 1;
+            AI(board, wcount, player, winner, r);//å¾…å®š
+            Record(board, wcount, player, point.x, point.y);
+            xs2 = point.x + 'A' - 1;
+            ys2 = point.y + 'A' - 1; //printf(" %d",num++);
+            //	printf("\nå† å†›æ•°ç»„ æŸ“è‰²ä½“å€¼ä¸ºï¼š%d %d %d %d %d %d  \n",gj[2].huowu,gj[2].chongwu,gj[2].shuanghuosi,gj[2].huosan,gj[2].huoer,gj[2].shiyingdu);
+
+            printf("\n");
+            printf("move %c%c%c%c\n", xs1, ys1, xs2, ys2);
+        } else if (strcmp(message, "new") == 0) {
+
+            scanf("%s", message);
+            fflush(stdin);
+            if (strcmp(message, "black") == 0) {
+                anti = 2;
+                player = 1;
+            } else {
+                player = 2;
+                anti = 1;
+            }
+            Init(board, wcount);
+            if (player == 1) {
+                char s1 = 'A' + 7, s2 = 'A' + 7;
+                Record(board, wcount, player, 7, 7);
+                printf("\n");
+                printf("move GG@@\n");
+            }
+        } else if (strcmp(message, "error") == 0)//ç€æ³•é”™è¯¯?
+        {
+            fflush(stdin);
+        } else if (strcmp(message, "name?") == 0)//è¯¢é—®å¼•æ“åç§°
+        {
+            fflush(stdin);
+            printf("name Parsifal\n");
+
+        } else if (strcmp(message, "end") == 0)//å¯¹å±€ç»“æŸ
+        {
+            fflush(stdin);
+        } else if (strcmp(message, "quit") == 0) {
+            fflush(stdin);
+            printf("Quit!\n");
+            break;
+        }
+        //printf("\n%d ",winner);
+    }
+}
+
+/**************************************************************************************************************/
+int main()   //ä¸»å‡½æ•°
+{
+    srand((unsigned) time(NULL));
+    for (int i = 1; i <= 20; i++)//ç»™20ç»„æŸ“è‰²ä½“å®šåˆå€¼
+    {
+        i1 += 100;
+        i2 += 20;
+        i1 += 16;
+        i1 += 8;
+        i1 += 4;
+        i1 += 2;
+        i1 += 1;
+        i1 += 1;
+        huowu[i] = i1;
+        chongwu[i] = i2;
+        shuanghuosi[i] = i3;
+        danhuosi[i] = i4;
+        miansi[i] = i5;
+        huosan[i] = i6;
+        miansan[i] = i7;
+        huoer[i] = i8;
+        ra[i].chongwu = chongwu[i];
+        ra[i].huowu = huowu[i];
+        ra[i].shuanghuosi = shuanghuosi[i];
+        ra[i].danhuosi = danhuosi[i];
+        ra[i].miansi = miansi[i];
+        ra[i].huoer = huoer[i];
+        ra[i].huosan = huosan[i];
+        ra[i].miansan = miansan[i];
+    }
+    memcpy(&gj[1], &ra[1], sizeof(ra[1]));
+    memcpy(&gj[2], &ra[2], sizeof(ra[2]));
+    memcpy(&gj[3], &ra[3], sizeof(ra[3]));
+    memcpy(&gj[4], &ra[4], sizeof(ra[4]));
+    memcpy(&gj[5], &ra[5], sizeof(ra[5]));
+    renji();
 }
 
 
