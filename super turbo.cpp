@@ -7,7 +7,6 @@
 #include <mmsystem.h>
 #include<string.h>
 #include<cstring>
-
 //void AI(int board[][19], int wcount[][1700], int &player, int &winner);
 /****************************************/     //基础设置
 //srand((unsigned)time(NULL));
@@ -17,20 +16,14 @@ struct Point            //点坐标的结构体
 } point;
 int huowu[21], chongwu[21], shuanghuosi[21], danhuosi[21], miansi[21], huosan[21], miansan[21], huoer[21];
 int i1 = 1500, i2 = 400, i3 = 300, i4 = 150, i5 = 75, i6 = 30, i7 = 6, i8 = 4;
-
-
 void record(int board[][20], int board1[][20], int wcount[][1700], int wcount1[][1700]);
-
 void Search(int table[][20], int player, int &x, int &y, int board[][20]);
-
 struct ranseti {
     int huowu;
     int chongwu;
     int shuanghuosi;
     int danhuosi, miansi, huosan, miansan, huoer;
-
     int shiyingdu = 0;
-
 };
 ranseti ra[21];
 ranseti gj[6];//冠军序列
@@ -54,7 +47,6 @@ void Init(int board[][20], int wcount[][1700])                //初始化函数�
 void Record(int board[][20], int wcount[3][1700], const int player, int x, int y)              //记录棋子、棋手的情况
 {
     board[x][y] = player;
-
     //棋盘状态记录 0表示空 1表示甲 2表示乙
 //printf("\nx=%c  y=%c\n",(x-1+'A'),(y-1+'A'));
     int k;
@@ -63,7 +55,6 @@ void Record(int board[][20], int wcount[3][1700], const int player, int x, int y
             19 * (y - 1) + x + 1200;
     (anti == player) ? (anti = 2) : (anti = 1);
     int flag;
-
     wcount[player][(y - 1) * 19 + x] = 1;
     wcount[player][19 * (y - 1) + x + 400] = 1;
     wcount[player][19 * (y - 1) + x + 800] = 1;
@@ -78,13 +69,10 @@ void Record(int board[][20], int wcount[3][1700], const int player, int x, int y
         l = wcount[player][sum1 - 1];
     if (sum1 + 1 <= 361)
         r = wcount[player][sum1 + 1];
-
-
     if (l >= 0)
         wcount[player][sum1] += l;
     if (r >= 0)
         wcount[player][sum1] += r;
-
 
     if (l > 0)
         for (int sd = 1; sd <= l; sd++) {
@@ -97,7 +85,6 @@ void Record(int board[][20], int wcount[3][1700], const int player, int x, int y
 //printf("\n%d",wcount[player][sum1]);
         }
 //printf("\n l1=%d r1=%d",l,r);
-
 
     l = 0, r = 0;//纵连
     if (y - 1 > 0)
@@ -174,9 +161,6 @@ int Judge(int wcount[][1700], const int player)                   //胜负判断
     }
 }
 
-
-
-
 /*****************************************************************************************************/           //AI核心
 
 void Grade(const int board[][20], const int wcount[][1700], int table[][20], const int ply,
@@ -193,16 +177,12 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
 每个活二加4， 每个眠二加1*/
 // huowu 12  chongwu 9 shuanghuosi 9  danhuosi 8 miansi 7  huosan 6 miansan 4  huoer 3
     for (x = 1; x <= 19; x++) {
-
         for (y = 1; y <= 19; y++) {
-
             heng = 1, zong = 1, zuo = 1, you = 1;
             //printf("\n%d%d%d%d",y,y,y,y);
-
             if (board[x][y] == 0) {//printf("\n%d%d%d%d",y,y,y,y);
                 sum1 = (y - 1) * 19 + x, sum2 = 19 * (y - 1) + x + 400, sum3 = 19 * (y - 1) + x + 800, sum4 =
                         19 * (y - 1) + x + 1200;
-
                 l = 0, r = 0;//横连
                 if (x - 1 > 0)
                     l = wcount[ply][sum1 - 1];
@@ -215,19 +195,15 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
                 temp = 0;
                 int sub = 0;
                 for (int k = 1; k <= 6 - heng; k++) {
-
-
                     if (l >= 0)
                         if ((wcount[player][sum1 - l - k] < 0 || (x - l - k) == 0))//左边界
                         {
                             sub++;
-
                         }
                     if (r >= 0)
                         if (wcount[player][sum1 + k + r] < 0 || (x + r + k) == 19)//右边界
                         {
                             sub++;
-
                         }
                     if (sub == 0) {
                         temp = 0;
@@ -307,20 +283,17 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
                             if ((wcount[player][sum2 - l * 19 - k * 19] < 0 || (y - l - k) == 0))//左边界
                             {
                                 sub++;
-
                             }
                         if (r >= 0)
                             if (wcount[player][sum2 + k * 19 + r * 19] < 0 || (y + r + k) == 19)//右边界
                             {
                                 sub++;
-
                             }
                         if (sub == 0) {
                             temp = 0;
                         } else if (sub == 1)
                             temp = 1;
                         else temp = 9;
-
                     }
                 if (zong <= 6)
                     switch (zong) {
@@ -363,7 +336,6 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
                             else if (temp == 9)
                                 table[x][y] += -10;
                             break;
-
                         case 6:
                             table[x][y] += 8888888;
                             break;
@@ -374,7 +346,6 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
 //printf("\n BF=zong  %d",zong);
 //if((x-1+'A')=='B'&&(y-1+'A')=='J'&&board[2][6]!=0)
 //printf("\n BJ=zong  %d  l=%d  r=%d table= %d \n",zong,l,r,table[x][y]);
-
 //if(l>=3||r>=3)
 //printf("\nl2=%d   r2=%d \n",l,r);
                 //printf("\n 4 table[x][y]=%d ",table[x][y]) ;
@@ -394,13 +365,11 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
                         if (wcount[player][sum3 - l * 20 - k * 20] < 0 || ((y - l - k) == 0 && (x - l - k) == 0))//左边界
                         {
                             sub++;
-
                         }
                     if (r >= 0)
                         if (wcount[player][sum3 + k * 20 + r * 20] < 0 || ((y + r + k) == 0 && (x + r + k) == 0))//右边界
                         {
                             sub++;
-
                         }
                     if (sub == 0) {
                         temp = 0;
@@ -411,7 +380,6 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
 //printf("\nl=%d   r=%d \n",l,r);
 /*for(k=1;k<=6-zuo;k++)
 {int sub=0;
-
 	if((wcount[anti][sum3-l*19-k*19-l-k]>0||((x-1)>0&&(y-1)>0)&&wcount[anti][sum3+r*19+k*19+r+k]<=0)||(wcount[anti][sum3+r*20+k*20]>0||((x+1)<=19&&(y+1)<=19)&&wcount[anti][sum3-l*20-k*20]<=0))
 	{
 	if(sub<2)
@@ -420,11 +388,8 @@ void Grade(const int board[][20], const int wcount[][1700], int table[][20], con
 	}
 	else if(sub>=2)
 {	temp=9;
-
 break;
-
 }
-
 //死棋
 	else
 	temp=0; //活棋
@@ -480,10 +445,8 @@ break;
                 //printf("\n 5 table[x][y]=%d ",table[x][y]) ;
 //if(l>=3||r>=3)
 //printf("\nl3=%d   r3=%d \n",l,r);
-
-                l = 0, r = 0;//右斜连
+               l = 0, r = 0;//右斜连
                 if (sum4 - 19 + 1 > 1200) {
-
                     l = wcount[player][sum4 - 18];
 //printf("\nl=%d",l);
                 }
@@ -496,28 +459,23 @@ break;
                 if (r >= 0)
                     you += r;
 //printf("\nl4=%d r4=%d ",l,r);
-
                 sub = 0;
                 for (int k = 1; k <= 6 - you; k++) {
-
                     if (l >= 0)
                         if (wcount[player][sum4 - l * 18 - k * 18] < 0 || ((y - l - k) == 0 && (x + l + k) == 0))//左边界
                         {
                             sub++;
-
                         }
                     if (r >= 0)
                         if (wcount[player][sum4 + k * 18 + r * 18] < 0 || ((y + r + k) == 0 && (x - r - k) == 0))//右边界
                         {
                             sub++;
-
                         }
                     if (sub == 0) {
                         temp = 0;
                     } else if (sub == 1)
                         temp = 1;
                     else temp = 9;
-
                 }
                 if (you <= 6)
                     switch (you) {
@@ -531,7 +489,6 @@ break;
                                 table[x][y] += 1;
                             else if (temp == 9)
                                 table[x][y] += -10;
-
                             break;
                         case 3:
                             if (temp == 0)
@@ -597,7 +554,6 @@ void Search(int table[][20], int player, int &x, int &y, int board[][20])       
         y = 7;
         return;
     }
-
     for (i = 1; i <= 19; i++) {
         for (j = 1; j <= 19; j++) {
             if (!board[i][j] && table[i][j] == max) {
@@ -638,7 +594,6 @@ for(int i=1;i<=19;i++)
     Search(table_cmp, player, x1_max, y1_max, board);
     Search(table_ply, player2, x2_max, y2_max, board);
 
-
     if (table_cmp[x1_max][y1_max] >= table_ply[x2_max][y2_max]) {
         point.x = x1_max;
         point.y = y1_max;
@@ -648,7 +603,6 @@ for(int i=1;i<=19;i++)
         point.y = y2_max;
         //	  Record(board,wcount,player,x2_max,y2_max);
     }
-
 //	printf("\n player==%d  的最大table值为 %d %d\n",player,table_ply[x2_max][y2_max],table_cmp[x1_max][y1_max]) ;
     winner = Judge(wcount, player);
 }
@@ -656,9 +610,7 @@ for(int i=1;i<=19;i++)
 /*六连=888888(极值)，活五=2500，冲五=600，双活四=400
 单活四加200，每个眠四加100，每个活三加50，每个眠三加10
 每个活二加4， 每个眠二加1*/
-
 ranseti chongzu[21];
-
 int Pm(ranseti *gj, int avg, int fmax)//基因变异概率
 {
     float pmm;
@@ -671,7 +623,6 @@ int Pm(ranseti *gj, int avg, int fmax)//基因变异概率
     if (p >= 1)
         return 1;
     else return 0;
-
 }// huowu 12  chongwu 9 shuanghuosi 9  danhuosi 8 miansi 7  huosan 6 miansan 4  huoer 3
 void by(ranseti *g, int avg, int fmax) {
     int p, x = 0;
@@ -679,8 +630,6 @@ void by(ranseti *g, int avg, int fmax) {
         p = Pm(g, avg, fmax);
         x += p;
         x << 1;
-
-
     }
     x >> 1;
     g->huowu = g->huowu ^ x + 400;//实现基因突变，运用数学的方法
@@ -692,7 +641,6 @@ void by(ranseti *g, int avg, int fmax) {
         x << 1;
     }
     x >> 1;
-
     g->chongwu = g->chongwu ^ x + 200;//实现基因突变，运用数学的方法
     x = 0;
     for (int i = 0; i < 9; i++) {
@@ -743,7 +691,6 @@ void by(ranseti *g, int avg, int fmax) {
     x >> 1;
     g->huoer = g->huoer ^ x;//实现基因突变，运用数学的方法
 }
-
 void bianyi(ranseti *g, int avg, int fmax)//基因变异
 {
     by(g, avg, fmax);
@@ -772,7 +719,6 @@ void exchange(ranseti x, ranseti y, int &num, int avg, int fmax) {
         cz[n].huowu = y.huowu;
         cz[n++].huowu = x.huowu;
         n++;
-
     } else {
         cz[n++].huowu = y.huowu;
         cz[n].huowu = x.huowu;
@@ -780,7 +726,6 @@ void exchange(ranseti x, ranseti y, int &num, int avg, int fmax) {
     }
     n -= 2;
     st = pc(avg, fmax, x.shiyingdu);
-
     if (st == 1) {
         cz[n].chongwu = y.chongwu;
         cz[n++].chongwu = x.chongwu;
@@ -797,7 +742,6 @@ void exchange(ranseti x, ranseti y, int &num, int avg, int fmax) {
         cz[n++].shuanghuosi = x.shuanghuosi;
         n++;
     } else {
-
         cz[n].shuanghuosi = x.shuanghuosi;
         cz[n++].shuanghuosi = y.shuanghuosi;
         n++;
@@ -888,11 +832,8 @@ void jiaocha(ranseti gj[], int avg) {
     for (int i = 1; i <= 5; i++)//冠军染色体开始变异
     {
         bianyi(&gj[i], avg, fmax);
-
-
         Cz(gj, avg, i, fmax);//基因重组
         //	printf("%d ",nu++);
-
     }
     for (int i = 1; i <= 20; i++)//生成新一代染色体
     {
@@ -916,7 +857,6 @@ int bisai(ranseti ra1, ranseti ra2, int board[][20], int wcount[][1700]) {
             flag = 1;
             break;
         }
-
         AI(board1, wcount2, 2, winner2, ra2);
         Record(board1, wcount2, 2, point.x, point.y);
         if (winner2) {
@@ -992,7 +932,6 @@ void jingsai(int board1[][20], int wcount1[][1700], int player) {
         num += ra[i].shiyingdu;
     avg = num / 20;
     guanjun(ra);//得出冠军的五个序列；
-
     jiaocha(gj, avg); //
 }
 
@@ -1054,11 +993,9 @@ void renji() {
             xs2 = point.x + 'A' - 1;
             ys2 = point.y + 'A' - 1; //printf(" %d",num++);
             //	printf("\n冠军数组 染色体值为：%d %d %d %d %d %d  \n",gj[2].huowu,gj[2].chongwu,gj[2].shuanghuosi,gj[2].huosan,gj[2].huoer,gj[2].shiyingdu);
-
             printf("\n");
             printf("move %c%c%c%c\n", xs1, ys1, xs2, ys2);
         } else if (strcmp(message, "new") == 0) {
-
             scanf("%s", message);
             fflush(stdin);
             if (strcmp(message, "black") == 0) {
